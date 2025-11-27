@@ -5,50 +5,37 @@
 using namespace std;
 
 class NODE{
-    int ord_number, qty;
+    int data;
     NODE *nextPtr;
 public:
-    NODE(int, int);
+    NODE(int);
     ~NODE();
     void set_next(NODE*);
     NODE* get_next();
-    int get_ord();
-    int get_qty();
+    int get_value();
 };
 
 typedef NODE* NodePtr;
 
-// Constructor: Stores Order Number and Quantity
-NODE::NODE(int o, int q){
-    ord_number = o;
-    qty = q;
+NODE::NODE(int x){
+    data = x;
     nextPtr = NULL;
 }
 
-// Getter: Get Order Number
-int NODE::get_ord(){
-    return ord_number;
-}
-
-// Getter: Get Quantity
-int NODE::get_qty(){
-    return qty;
-}
-
-// Getter: Get next node pointer
 NODE* NODE::get_next(){
     return nextPtr;
 }
 
-// Setter: Set next node pointer
-void NODE::set_next(NODE *t){
-    nextPtr = t;
+int NODE::get_value(){
+    return data;
 }
 
-// Destructor
+void NODE::set_next(NODE *t){
+     nextPtr = t;
+}
+
 NODE::~NODE(){
-    // Left empty to match the clean output of the image
-    // cout << "deleting " << ord_number << endl; 
+     cout << "deleting " << data << endl;
 }
 
 #endif
