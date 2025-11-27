@@ -1,37 +1,38 @@
-#include<iostream>
-#include <stdlib.h> // Required for atoi()
-#include <string.h> // Required for strcmp()
+#include <iostream>
+#include <cstdlib> // for atoi
+#include <cstring> // for strcmp
+#include "queue.h"
+
 using namespace std;
 
-#include "stack.h"
-
 int main(int argc, char **argv){
-    Stack s;
-     s.push(5);
-     s.push(1);
-     s.push(7);
-     s.pop(); // Pops 7
-     s.push(6);
-     s.pop(); // Pops 6
-     // Stack now contains: 1, 5 (from bottom up)
+    Queue q;
+    int i = 1;
 
- /*
-  Exercise 1*/
-    cout << "\n--- Exercise 1: Processing argv ---" << endl;
-    int i;
-    for(i=1; i<argc; i++){
-        // If argument is "x", pop the stack
-        if(strcmp(argv[i], "x") == 0) {
-            cout << "Popping value..." << endl;
-            s.pop(); // The ~NODE() destructor will print "deleting [value]"
-        }
-        else { // Otherwise, push the argument as an integer
-            int val = atoi(argv[i]);
-            cout << "Pushing value: " << val << endl;
-            s.push(val);
+    // Loop through command line arguments
+    while(i < argc){
+        if(strcmp(argv[i], "x") == 0){
+            q.dequeue();
+            i++;
+        } else {
+            // Assume input is always valid pairs: [Order_ID] [Quantity]
+            if(i + 1 < argc){
+                int order = atoi(argv[i]);
+                int qty = atoi(argv[i+1]);
+                
+                q.enqueue(order, qty);
+                cout << "My order is " << order << endl;
+                
+                i += 2; // Move past both the order number and quantity
+            } else {
+                // Edge case: number without quantity at the very end
+                i++;
+            }
         }
     }
- 
-    cout << "\nMain finished. Destructor will be called automatically." << endl;
+
+    cout << "========================================" << endl;
+    cout << "There are " << q.get_size() << " ppl left in the queue" << endl;
+
     return 0;
 }

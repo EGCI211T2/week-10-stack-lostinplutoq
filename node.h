@@ -1,6 +1,3 @@
-//
-//  node.h
-//
 #ifndef node_h
 #define node_h
 
@@ -8,22 +5,34 @@
 using namespace std;
 
 class NODE{
-     int data;
+    int ord_number, qty;
     NODE *nextPtr;
 public:
-    NODE(int);
+    NODE(int, int);
     ~NODE();
     void set_next(NODE*);
     NODE* get_next();
-    int get_value();
+    int get_ord();
+    int get_qty();
 };
 
 typedef NODE* NodePtr;
 
-// Constructor
-NODE::NODE(int x){
-    data = x;
+// Constructor: Stores Order Number and Quantity
+NODE::NODE(int o, int q){
+    ord_number = o;
+    qty = q;
     nextPtr = NULL;
+}
+
+// Getter: Get Order Number
+int NODE::get_ord(){
+    return ord_number;
+}
+
+// Getter: Get Quantity
+int NODE::get_qty(){
+    return qty;
 }
 
 // Getter: Get next node pointer
@@ -31,19 +40,15 @@ NODE* NODE::get_next(){
     return nextPtr;
 }
 
-// Getter: Get data value
-int NODE::get_value(){
-    return data;
-}
-
 // Setter: Set next node pointer
 void NODE::set_next(NODE *t){
-     nextPtr = t;
+    nextPtr = t;
 }
 
 // Destructor
 NODE::~NODE(){
-     cout << "deleting " << data << endl;
+    // Left empty to match the clean output of the image
+    // cout << "deleting " << ord_number << endl; 
 }
 
 #endif

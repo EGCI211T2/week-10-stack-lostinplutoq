@@ -1,72 +1,119 @@
-#ifndef stack_h
-#define stack_h
-#include "node.h"
-#include <iostream> // Required for cout
-using namespace std;  // Assumed from your other files
+#ifndef queue_h
+#define queue_h
 
-class Stack {
-    NodePtr top;
+#include "node.h"
+#include <iostream>
+
+using namespace std;
+
+class Queue {
+    NodePtr headPtr, tailPtr;
     int size;
+    int customerNum; // Keeps track of customer number (1, 2, 3...)
 public:
-    void push(int);
-    int pop();
-    bool isEmpty(); // Added helper function, useful for pop and Ex 2
-    Stack();
-    ~Stack();
+    void enqueue(int, int);
+    void dequeue();
+    int get_size();
+    Queue();
+    ~Queue();
 };
 
-
-void Stack::push(int x){
-  NodePtr new_node = new NODE(x);
-  if(new_node){ // Check if memory allocation was successful
-        // New node's next pointer points to the current top
-        new_node->set_next(top);
-        // The stack's top pointer now points to the new node
-        top = new_node;
-        size++;
-   } else {
-       cout << "Error: Memory allocation failed." << endl;
-   }
-}
-
-int Stack::pop(){
-    if(isEmpty()){
-        // cout << "Stack is empty. Cannot pop." << endl;
-        return 0; // Return a default/null value for the parenthesis checker
-    }
-    
-    NodePtr t = top;      // Temporary pointer to the top node
-    int value;
-    value = t->get_value(); // Get the value from the top node
-    
-    top = top->get_next(); // Move the stack's top pointer to the next node
-    size--;
-    
-    delete t;      // Delete the original top node (this will print "deleting X")
-    return value;
-}
-
-bool Stack::isEmpty(){
-    return top == NULL; // Stack is empty if top is NULL
-}
-
-Stack::Stack(){
-    //initialize stack
-    top = NULL;
+Queue::Queue(){
+    headPtr = NULL;
+    tailPtr = NULL;
     size = 0;
+    customerNum = 1;
 }
 
-Stack::~Stack(){
-    //delete all remaning stack (i.e. pop all) 
-    cout << "--- Deleting remaining stack nodes ---" << endl;
-    NodePtr t = top;
-    while(t != NULL){
-        NodePtr next = t->get_next(); // Save the next node
-        delete t;                     // Delete the current node (prints "deleting X")
-        t = next;                     // Move to the next node
+void Queue::enqueue(int x, int y){
+    NodePtr new_node = new NODE(x, y);
+    if(new_node){
+        if(size == 0){
+            headPtr = new_node;
+        } else {
+            tailPtr->set_next(new_node);
+        }
+        tailPtr = new_node;
+        size++;
     }
-    cout << "--- Stack deletion complete ---" << endl;
 }
 
+void Queue::dequeue(){
+    if(headPtr == NULL) {
+        // Rule 1: If the queue is empty, don't ask them to pay.
+        cout << "The queue is empty." << endl;
+        return;
+    }
+
+    NodePtr t = headPtr;
+    int order = t->get_ord();
+    int qty = t->get_qty();
+    int price = 0;
+    string foodName = "";
+
+    // Pricing Logic
+    switch(order){
+        case 1: 
+            foodName = "Ramen"; 
+            price = 100 * qty; 
+            break;
+        case 2: 
+            foodName = "Somtum"; 
+            price = 20 * qty; 
+            break;
+        case 3: 
+            foodName = "Fried Chicken"; 
+            price = 50 * qty; 
+            break;
+        default: 
+            foodName = "Unknown"; 
+            price = 0; 
+            break;
+    }
+
+    cout << "Customer no: " << customerNum << endl;
+    cout << foodName << endl;
+    cout << "You have to pay " << price << endl;
+
+    // Payment Loop
+    int cash = 0;
+    while(true){
+        cout << ":Cash:";
+        cin >> cash;
+        if(cash >= price) break;
+        // If needed, you could print "Not enough" here, but the image implies just looping or re-entering.
+    }
+
+    cout << "Thank you" << endl;
+    
+    // Rule 2: If there is no change, you don't give change.
+    int change = cash - price;
+    if(change > 0){
+        cout << "Change is:" << change << endl;
+    }
+    cout << "========================================" << endl; // Separator for next customer
+
+    // Move head to next
+    headPtr = headPtr->get_next();
+    if(headPtr == NULL) tailPtr = NULL; // Update tail if queue becomes empty
+
+    size--;
+    customerNum++;
+    delete t;
+}
+
+int Queue::get_size(){
+    return size;
+}
+
+Queue::~Queue(){
+    // Clean up remaining nodes
+    NodePtr t = headPtr;
+    while(t != NULL){
+        NodePtr next = t->get_next();
+        delete t;
+        t = next;
+    }
+}
 
 #endif
